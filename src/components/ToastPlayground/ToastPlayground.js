@@ -1,14 +1,37 @@
 import Button from '../Button';
 import React from 'react';
 import Toast from '../Toast/Toast';
+import ToastShelf from '../ToastShelf/ToastShelf';
 import styles from './ToastPlayground.module.css';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
-  const [message, SetMessage] = React.useState('');
+  const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState('notice');
-  const [isToastVisible, setIsToastVisible] = React.useState(false);
+  const [generatedToasts, setGeneratedToasts] = React.useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newToast = {
+      id: Math.random(),
+      message: message,
+      variant: variant,
+    };
+    setGeneratedToasts([...generatedToasts, newToast]);
+
+    // reset form fields
+    setMessage('');
+    setVariant('notice');
+  };
+
+  const handleToastDismiss = (id) => {
+    const nextToastList = generatedToasts.filter(
+      (toast) => toast.id !== id
+    );
+    setGeneratedToasts(nextToastList);
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -16,20 +39,13 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
-      {isToastVisible && (
-        <Toast
-          message={message}
-          variant={variant}
-          onDismiss={() => setIsToastVisible(false)}
-        />
-      )}
+      <ToastShelf
+        toasts={generatedToasts}
+        handleToastDismiss={handleToastDismiss}
+      />
 
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          setIsToastVisible(true);
-          console.log({ message, variant });
-        }}
+        onSubmit={handleSubmit}
         className={styles.controlsWrapper}
       >
         <div className={styles.row}>
@@ -45,7 +61,7 @@ function ToastPlayground() {
               id="message"
               className={styles.messageInput}
               value={message}
-              onChange={(e) => SetMessage(e.target.value)}
+              onChange={(e) => setMessage(e.target.value)}
             />
           </div>
         </div>
