@@ -20,10 +20,20 @@ function ToastProvider({ children }) {
     setToasts(nextToastList);
   };
 
+  const handleClearToasts = () => setToasts([]);
+
+  const ctxValue = React.useMemo(() => {
+    return {
+      toasts,
+      handleToastCreation,
+      handleToastDismiss,
+      handleClearToasts,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toasts]);
+
   return (
-    <ToastContext.Provider
-      value={{ toasts, handleToastCreation, handleToastDismiss }}
-    >
+    <ToastContext.Provider value={ctxValue}>
       {children}
     </ToastContext.Provider>
   );
