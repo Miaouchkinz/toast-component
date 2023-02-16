@@ -1,4 +1,5 @@
 import React from 'react';
+import useKeyDown from '../../hooks/useKeydown';
 
 export const ToastContext = React.createContext();
 
@@ -21,13 +22,13 @@ function ToastProvider({ children }) {
   };
 
   const handleClearToasts = () => setToasts([]);
+  useKeyDown('Escape', handleClearToasts);
 
   const ctxValue = React.useMemo(() => {
     return {
       toasts,
       handleToastCreation,
       handleToastDismiss,
-      handleClearToasts,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toasts]);
