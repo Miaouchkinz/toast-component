@@ -1,5 +1,6 @@
 import Button from '../Button';
 import React from 'react';
+import Toast from '../Toast/Toast';
 import styles from './ToastPlayground.module.css';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
@@ -7,6 +8,7 @@ const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 function ToastPlayground() {
   const [message, SetMessage] = React.useState('');
   const [variant, setVariant] = React.useState('notice');
+  const [isToastVisible, setIsToastVisible] = React.useState(false);
 
   return (
     <div className={styles.wrapper}>
@@ -14,10 +16,18 @@ function ToastPlayground() {
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
+      {isToastVisible && (
+        <Toast
+          message={message}
+          variant={variant}
+          onDismiss={() => setIsToastVisible(false)}
+        />
+      )}
 
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          setIsToastVisible(true);
           console.log({ message, variant });
         }}
         className={styles.controlsWrapper}
