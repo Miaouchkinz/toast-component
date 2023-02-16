@@ -21,20 +21,20 @@ function ToastProvider({ children }) {
     setToasts(nextToastList);
   };
 
-  const handleClearToasts = () => setToasts([]);
+  const handleClearToasts = React.useCallback(() => {
+    setToasts([]);
+  }, []);
+
   useKeyDown('Escape', handleClearToasts);
 
-  const ctxValue = React.useMemo(() => {
-    return {
-      toasts,
-      handleToastCreation,
-      handleToastDismiss,
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toasts]);
-
   return (
-    <ToastContext.Provider value={ctxValue}>
+    <ToastContext.Provider
+      value={{
+        toasts,
+        handleToastCreation,
+        handleToastDismiss,
+      }}
+    >
       {children}
     </ToastContext.Provider>
   );
